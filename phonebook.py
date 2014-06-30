@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import sys
 import re
 
@@ -15,7 +16,7 @@ def pb_parse_output_row(name, number):
 # parse all results (accepts list of key-value pairs)
 def print_results(rows):
     for name, number in rows.iteritems():
-        print pb_parse_output_row(name, number)
+        print name + ' ' + number
 
 # load phonebook from file
 def pb_load(filename):
@@ -33,6 +34,16 @@ def pb_save(filename, pb):
     for name, number in pb.iteritems():
         file_obj.write(pb_parse_output_row(name, number))
     file_obj.close()
+
+def pb_create(filename):
+    try:
+        file_ = open(filename, 'r')
+        file_obj = open(filename, 'w')
+        file_obj.close()
+        print 'Created phonebook ' + filename + 'in current directory'
+    except IOError as e:
+        print 'File ' + filename + ' already exists!'
+        return False
 
 # find by text partial match to name string
 def pb_lookup(name_lookup, pb):
@@ -73,70 +84,79 @@ def pb_remove(name, pb):
     else:
         return False
 
+def parse_arguments(args):
+    accepted_commands = ['create', 'add', 'change', 'remove', 'lookup', 'reverse_lookup']
+    filename = None
+    name = None
+    number = None
+    search_term = None
 
-def main():
-    phonebook = {}
+    command = args[0]
+    if command not in accepted_commands:
+        print 'Command not recognized'
+        return False
 
+    filename = args.pop()
+    if command in ['lookup', 'reverse-lookup']:
+        search_term = args[1]
+    elif command in ['add', 'create', 'change']:
+        name = args[1]
+        number = args[2]
+    elif command == 'remove':
+        name = args[1]
+    return filename, name, number, search_term
+
+
+def handle_lookup(filename, search_term, phonebook):
+    results = pb_lookup(search_term, phonebook)
+    if len(results) > 0:
+        print_results(results)
+    else:
+        print 'No search results for ' + search_term
+
+def handle_add(name, number, filename, phonebook):
+    if pb_add(name, number, phonebook) == True:
+        print 'Added "' + name + ' ' + number + '" to phonebook ' + filename
+        pb_save(filename, phonebook)
+    else:
+        print 'A person called ' + name + ' already in phonebook ' + filename + '. Changes ignored.'
+
+def handle_change(name, number, filename, phonebook):
+    if pb_change(name, number, filename) == True:
+        print 'Change number for "' + name + '" to "' + number + '" in phonebook ' + filename
+        pb_save(filename, phonebook)
+    else:
+        print 'No person called ' + name + ' in phonebook ' + filename + '. Changes ignored.'
+
+def handle_remove(name, filename, phonebook):
+    if pb_remove(name, phonebook) == True:
+        print 'Removed "' + name + '" from phonebook ' + filename
+        pb_save(filename, phonebook)
+    else:
+        print 'No person called ' + name + ' in phonebook ' + filename + '. Changes ignored.'
+
+def __main__():
     # get argumets, make sure the py file is not the first one.
     arguments = sys.argv
     if arguments[0] == 'phonebook.py': arguments.pop(0)
-    cmd = arguments[0]
+    command = arguments[0]
+    filename, name, number, search_term = parse_arguments(arguments)
 
-    if cmd == 'create':
-        # create new phonebook file
-        filename = arguments[1]
-        pb_save(filename, {})
-        print 'Created phonebook ' + filename + 'in current directory'
-    elif cmd == 'lookup':
-        # phonebook lookup Sarah hsphonebook.pb # error message on no such phonebook
-        search_term = arguments[1]
-        filename = arguments[2]
-        phonebook = pb_load(filename)
-        results = pb_lookup(search_term, phonebook)
-        if results.length > 0:
-            print_results(results)
-        else:
-            print 'No search results for ' + search_term
-    elif cmd == 'reverse-lookup':
-        # phonebook reverse-lookup '312 432 5432' hsphonebook.pb
-        search_term = arguments[1]
-        filename = arguments[2]
-        phonebook = pb_load(filename)
-        print_results(pb_reverse_lookup(search_term, phonebook))
-    elif cmd == 'add':
-        # add 'John Michael' '123 456 4323' hsphonebook.pb # error message on duplicate name
-        name = arguments[1]
-        number = arguments[2]
-        filename = arguments[3]
-        phonebook = pb_load(filename)
-        if pb_add(name, number, phonebook) == True:
-            print 'Added "' + name + ' ' + number + '" to phonebook ' + filename
-            pb_save(filename, phonebook)
-        else:
-            print 'A person called ' + name + ' already in phonebook ' + filename + '. Changes ignored.'
-    elif cmd == 'change':
-        # phonebook change 'John Michael' '234 521 2332' hsphonebook.pb # error message on not exist
-        name = arguments[1]
-        number = arguments[2]
-        filename = arguments[3]
-        phonebook = pb_load(filename)
-        if pb_change(name, number, phonebook) == True:
-            print 'Change number for "' + name + '" to "' + number + '" in phonebook ' + filename
-            pb_save(filename, phonebook)
-        else:
-            print 'No person called ' + name + ' in phonebook ' + filename + '. Changes ignored.'
-    elif cmd == 'remove':
-        name = arguments[1]
-        filename = arguments[2]
-        phonebook = pb_load(filename)
-        if pb_remove(name, phonebook) == True:
-            print 'Removed "' + name + '" from phonebook ' + filename
-            pb_save(filename, phonebook)
-        else:
-            print 'No person called ' + name + ' in phonebook ' + filename + '. Changes ignored.'
-
-        # phonebook remove 'John Michael' hsphonebook.pb # error message on not exist
+    if command == 'create':                 # create new phonebook file
+        pb_create(filename)
     else:
-        print 'Command not recognized'
+        phonebook = pb_load(filename)
+        if command == 'lookup':               # phonebook lookup Sarah hsphonebook.pb # error message on no such phonebook
+            handle_lookup(filename, search_term, phonebook)
+        # phonebook reverse-lookup '312 432 5432' hsphonebook.pb
+        elif command == 'reverse-lookup':
+            print_results(pb_reverse_lookup(search_term, phonebook))
+        elif command == 'add':
+            handle_add(name, number, filename, phonebook)
+        # phonebook change 'John Michael' '234 521 2332' hsphonebook.pb # error message on not exist
+        elif command == 'change':
+            handle_change(name, number, filename, phonebook)
+        elif command == 'remove':         # phonebook remove 'John Michael' hsphonebook.pb # error message on not exist
+            handle_remove(name, filename, phonebook)
 
-main()
+__main__()
