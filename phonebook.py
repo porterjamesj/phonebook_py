@@ -55,13 +55,13 @@ def pb_create(filename):
         return False
 
 
-def pb_lookup(name_lookup, pb):
+def pb_lookup(query, pb):
     """find by text partial match to name string"""
     results = {}
-    search_name = name_lookup.lower()
-    for name, num in pb.iteritems():
-        if search_name in name.lower():
-            results[name] = num
+    lowered_query = query.lower()
+    for contact in pb:
+        if lowered_query in contact.lower():
+            results[contact] = pb[contact]
     return results
 
 
