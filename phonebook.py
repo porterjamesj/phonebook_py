@@ -2,12 +2,13 @@
 import sys
 import re
 
+
 # parse one row from file input
 def pb_parse_input_row(row):
-    name = re.sub('\d', '', row)    # remove digits
-    name = name.replace('\n', '')
-    number = re.sub('\D', '', row)  # remove non-digits
-    return name.strip(), number
+    row = row.rstrip("\n")  # remove trailing newline
+    name = [c for c in row if not c.isdigit()]  # remove digits
+    number = [c for c in row if c.isdigit()]  # remove non-digits
+    return name, number
 
 
 # parse output string from name & number
