@@ -138,7 +138,7 @@ rev_lookup_parser.add_argument("phonebook", help="phonebook to lookup in.")
 
 def handle_lookup(search_term, phonebook):
     results = pb_lookup(search_term, phonebook)
-    if len(results) > 0:
+    if results:
         print_results(results)
     else:
         print('No search results for %s' % (search_term))
