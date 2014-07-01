@@ -28,20 +28,18 @@ def print_results(rows):
 # load phonebook from file
 def pb_load(filename):
     pb = {}
-    file_obj = open(filename, 'r')
-    for line in file_obj:
-        name, number = pb_parse_input_row(line)
-        pb[name] = number
-    file_obj.close()
+    with open(filename, 'r') as f:
+        for line in f:
+            name, number = pb_parse_input_row(line)
+            pb[name] = number
     return pb
 
 
 # save phonebook to a file
 def pb_save(filename, pb):
-    file_obj = open(filename, 'w')
-    for name, number in pb.iteritems():
-        file_obj.write(pb_parse_output_row(name, number))
-    file_obj.close()
+    with open(filename, 'w') as f:
+        for name, number in pb.iteritems():
+            f.write(pb_parse_output_row(name, number))
 
 
 def file_exists(filename):
