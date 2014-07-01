@@ -7,7 +7,7 @@ import os
 def pb_parse_input_row(row):
     """parse one row from file input"""
     row = row.rstrip("\n")  # remove trailing newline
-    name = "".join([c for c in row if not c.isdigit()])  # remove digits
+    name = "".join([c for c in row if not c.isdigit()]).strip()  # remove digits
     number = "".join([c for c in row if c.isdigit()])  # remove non-digits
     return name, number
 
