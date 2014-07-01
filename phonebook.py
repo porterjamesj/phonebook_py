@@ -45,6 +45,8 @@ def pb_save(filename, pb):
 
 def pb_create(filename):
     if not os.path.isfile(filename):
+        # sadly there is no os.touch method, I'm not aware of a better
+        # way to do it than this
         file_obj = open(filename, 'w')
         file_obj.close()
         print('Created phonebook %s in current directory' % (filename))
