@@ -9,9 +9,11 @@ def pb_parse_input_row(row):
     number = re.sub('\D', '', row)  # remove non-digits
     return name.strip(), number
 
+
 # parse output string from name & number
 def pb_parse_output_row(name, number):
     return name + ' ' + number + '\n'
+
 
 # parse all results (accepts list of key-value pairs)
 def print_results(rows):
@@ -20,6 +22,7 @@ def print_results(rows):
             print name + ' ' + number
     else:
         print 'No results'
+
 
 # load phonebook from file
 def pb_load(filename):
@@ -30,6 +33,7 @@ def pb_load(filename):
         pb[name] = number
     file_obj.close()
     return pb
+
 
 # save phonebook to a file
 def pb_save(filename, pb):
@@ -57,6 +61,7 @@ def pb_create(filename):
         print('Error: file %s already exists!' % (filename))
         return False
 
+
 # find by text partial match to name string
 def pb_lookup(name_lookup, pb):
     results = {};
@@ -65,6 +70,7 @@ def pb_lookup(name_lookup, pb):
         if search_name in name.lower():
             results[name] = num
     return results
+
 
 # find by phone number (exact match)
 def pb_reverse_lookup(number, pb):
@@ -75,12 +81,14 @@ def pb_reverse_lookup(number, pb):
             results[name] = num
     return results
 
+
 # check if row exists. Return false if already exists
 def pb_add(name, number, pb):
     if name in pb:
         return False
     pb[name] = number
     return True
+
 
 def pb_change(name, number, pb):
     print(name, number, pb)
@@ -90,6 +98,7 @@ def pb_change(name, number, pb):
     else:
         return False
 
+
 # phonebook remove 'John Michael' hsphonebook.pb # error message on not exist
 def pb_remove(name, pb):
     if (name in pb):
@@ -97,6 +106,7 @@ def pb_remove(name, pb):
         return True
     else:
         return False
+
 
 def parse_arguments(args):
     accepted_commands = ['create', 'add', 'change', 'remove',
@@ -129,6 +139,7 @@ def handle_lookup(filename, search_term, phonebook):
     else:
         print('No search results for %s' % (search_term))
 
+
 def handle_add(name, number, filename, phonebook):
     if pb_add(name, number, phonebook):
         print('Added "%s %s to phonebook %s' % (name, number, filename))
@@ -136,6 +147,7 @@ def handle_add(name, number, filename, phonebook):
     else:
         print('A person called %s already in phonebook %s. Changes ignored.' %
               (name, filename))
+
 
 def handle_change(name, number, filename, phonebook):
     if pb_change(name, number, phonebook):
@@ -146,6 +158,7 @@ def handle_change(name, number, filename, phonebook):
         print('No person called %s in phonebook %s. Changes ignored.' %
               (name, filename))
 
+
 def handle_remove(name, filename, phonebook):
     if pb_remove(name, phonebook):
         print('Removed "%s" from phonebook %s' % (name, filename))
@@ -153,6 +166,7 @@ def handle_remove(name, filename, phonebook):
     else:
         print('No person called %s in phonebook %s. Changes ignored.' %
               (name, filename))
+
 
 def __main__():
     # get argumets, make sure the py file is not the first one.
