@@ -99,7 +99,8 @@ def pb_remove(name, pb):
         return False
 
 def parse_arguments(args):
-    accepted_commands = ['create', 'add', 'change', 'remove', 'lookup', 'reverse-lookup']
+    accepted_commands = ['create', 'add', 'change', 'remove',
+'lookup', 'reverse-lookup']
     filename = None
     name = None
     number = None
@@ -157,21 +158,27 @@ def __main__():
     command = arguments[0]
     filename, name, number, search_term = parse_arguments(arguments)
 
-    if command == 'create':                 # create new phonebook file
+    if command == 'create':
+        # create new phonebook file
         pb_create(filename)
     else:
         phonebook = pb_load(filename)
-        if command == 'lookup':               # phonebook lookup Sarah hsphonebook.pb # error message on no such phonebook
+        if command == 'lookup':
+            # phonebook lookup Sarah hsphonebook.pb
+            # error message on no such phonebook
             handle_lookup(filename, search_term, phonebook)
-        # phonebook reverse-lookup '312 432 5432' hsphonebook.pb
         elif command == 'reverse-lookup':
+            # phonebook reverse-lookup '312 432 5432' hsphonebook.pb
             print_results(pb_reverse_lookup(search_term, phonebook))
         elif command == 'add':
             handle_add(name, number, filename, phonebook)
-        # phonebook change 'John Michael' '234 521 2332' hsphonebook.pb # error message on not exist
         elif command == 'change':
+            # phonebook change 'John Michael' '234 521 2332' hsphonebook.pb
+            # error message on not exist
             handle_change(name, number, filename, phonebook)
-        elif command == 'remove':         # phonebook remove 'John Michael' hsphonebook.pb # error message on not exist
+        elif command == 'remove':
+            # phonebook remove 'John Michael' hsphonebook.pb
+            # error message on not exist
             handle_remove(name, filename, phonebook)
 
 __main__()
