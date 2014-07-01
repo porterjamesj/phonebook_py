@@ -3,21 +3,22 @@ import sys
 import re
 import os
 
-# parse one row from file input
+
 def pb_parse_input_row(row):
+    """parse one row from file input"""
     row = row.rstrip("\n")  # remove trailing newline
     name = [c for c in row if not c.isdigit()]  # remove digits
     number = [c for c in row if c.isdigit()]  # remove non-digits
     return name, number
 
 
-# parse output string from name & number
 def pb_parse_output_row(name, number):
+    """parse output string from name & number"""
     return name + ' ' + number + '\n'
 
 
-# parse all results (accepts list of key-value pairs)
 def print_results(rows):
+    """parse all results (accepts list of key-value pairs)"""
     if len(rows) > 0:
         for name, number in rows.iteritems():
             print name + ' ' + number
@@ -25,8 +26,8 @@ def print_results(rows):
         print 'No results'
 
 
-# load phonebook from file
 def pb_load(filename):
+    """load phonebook from file"""
     pb = {}
     with open(filename, 'r') as f:
         for line in f:
@@ -35,8 +36,8 @@ def pb_load(filename):
     return pb
 
 
-# save phonebook to a file
 def pb_save(filename, pb):
+    """save phonebook to a file"""
     with open(filename, 'w') as f:
         for name, number in pb.iteritems():
             f.write(pb_parse_output_row(name, number))
@@ -52,8 +53,8 @@ def pb_create(filename):
         return False
 
 
-# find by text partial match to name string
 def pb_lookup(name_lookup, pb):
+    """find by text partial match to name string"""
     results = {}
     search_name = name_lookup.lower()
     for name, num in pb.iteritems():
@@ -62,8 +63,8 @@ def pb_lookup(name_lookup, pb):
     return results
 
 
-# find by phone number (exact match)
 def pb_reverse_lookup(number, pb):
+    """find by phone number (exact match)"""
     results = {}
     num = re.sub('\D', '', number)
     for name, num in pb.iteritems():
@@ -72,8 +73,8 @@ def pb_reverse_lookup(number, pb):
     return results
 
 
-# check if row exists. Return false if already exists
 def pb_add(name, number, pb):
+    """check if row exists. Return false if already exists"""
     if name in pb:
         return False
     pb[name] = number
@@ -89,8 +90,9 @@ def pb_change(name, number, pb):
         return False
 
 
-# phonebook remove 'John Michael' hsphonebook.pb # error message on not exist
 def pb_remove(name, pb):
+    """phonebook remove 'John Michael' hsphonebook.pb # error message on
+    not exist"""
     if (name in pb):
         pb.pop(name, None)
         return True
