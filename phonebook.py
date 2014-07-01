@@ -49,7 +49,7 @@ def file_exists(filename):
 
 
 def pb_create(filename):
-    if file_exists(filename) == False:
+    if not file_exists(filename):
         file_obj = open(filename, 'w')
         file_obj.close()
         print('Created phonebook %s in current directory' % (filename))
