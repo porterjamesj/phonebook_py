@@ -7,8 +7,8 @@ import os
 def pb_parse_input_row(row):
     """parse one row from file input"""
     row = row.rstrip("\n")  # remove trailing newline
-    name = [c for c in row if not c.isdigit()]  # remove digits
-    number = [c for c in row if c.isdigit()]  # remove non-digits
+    name = "".join([c for c in row if not c.isdigit()])  # remove digits
+    number = "".join([c for c in row if c.isdigit()])  # remove non-digits
     return name, number
 
 
@@ -68,9 +68,9 @@ def pb_lookup(query, pb):
 def pb_reverse_lookup(number, pb):
     """find by phone number (exact match)"""
     results = {}
-    num = re.sub('\D', '', number)
+    cannonical_num = "".join([c for c in number if c.isdigit()])
     for name, num in pb.iteritems():
-        if num == number:
+        if num == cannonical_num:
             results[name] = num
     return results
 
