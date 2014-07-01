@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import sys
-import re
+import argparse
 import os
 
 
@@ -102,31 +102,41 @@ def pb_remove(name, pb):
         return False
 
 
-def parse_arguments(args):
-    accepted_commands = ['create', 'add', 'change', 'remove',
-                         'lookup', 'reverse-lookup']
-    filename = None
-    name = None
-    number = None
-    search_term = None
+parser = argparse.ArgumentParser(description="Manage those phonebooks.")
+subparsers = parser.add_subparsers(dest="command")
 
-    command = args[0]
-    if command not in accepted_commands:
-        print 'Command not recognized'
-        return False
+create_parser = subparsers.add_parser("create", help="Create a new phonebook.")
+create_parser.add_argument("name", help="name of the phonebook to create.")
 
-    filename = args.pop()
-    if command in ['lookup', 'reverse-lookup']:
-        search_term = args[1]
-    elif command in ['add', 'change']:
-        name = args[1]
-        number = args[2]
-    elif command == 'remove':
-        name = args[1]
-    return filename, name, number, search_term
+lookup_parser = subparsers.add_parser("lookup",
+                                      help="Lookup a person in a phonebook.")
+lookup_parser.add_argument("name", help="name of person to lookup.")
+lookup_parser.add_argument("phonebook", help="phonebook to look up in.")
+
+add_parser = subparsers.add_parser("add",
+                                   help="Add a new person to phonebook.")
+add_parser.add_argument("name", help="name of person to add")
+add_parser.add_argument("number", help="their number")
+add_parser.add_argument("phonebook", help="phonebook to look up in.")
+
+change_parser = subparsers.add_parser("change",
+                                      help="Change someone's phone number.")
+change_parser.add_argument("name", help="name of person whose number to change.")
+change_parser.add_argument("number", help="new number")
+change_parser.add_argument("phonebook", help="phonebook to change in.")
+
+remove_parser = subparsers.add_parser("remove",
+                                      help="Remove someone.")
+remove_parser.add_argument("name", help="name of person to remove.")
+remove_parser.add_argument("phonebook", help="phonebook to remove them from.")
+
+rev_lookup_parser = subparsers.add_parser("reverse-lookup",
+                                          help="Look someone up by number.")
+rev_lookup_parser.add_argument("number", help="number of person to look up.")
+rev_lookup_parser.add_argument("phonebook", help="phonebook to lookup in.")
 
 
-def handle_lookup(filename, search_term, phonebook):
+def handle_lookup(search_term, phonebook):
     results = pb_lookup(search_term, phonebook)
     if len(results) > 0:
         print_results(results)
@@ -163,35 +173,30 @@ def handle_remove(name, filename, phonebook):
 
 
 def main():
-    # get argumets, make sure the py file is not the first one.
-    arguments = sys.argv
-    if arguments[0] == 'phonebook.py':
-        arguments.pop(0)
-    command = arguments[0]
-    filename, name, number, search_term = parse_arguments(arguments)
+    args = parser.parse_args()  # uses sys.argv internally
 
-    if command == 'create':
+    if args.command == 'create':
         # create new phonebook file
-        pb_create(filename)
+        pb_create(args.name)
     else:
-        phonebook = pb_load(filename)
-        if command == 'lookup':
+        phonebook = pb_load(args.phonebook)
+        if args.command == 'lookup':
             # phonebook lookup Sarah hsphonebook.pb
             # error message on no such phonebook
-            handle_lookup(filename, search_term, phonebook)
-        elif command == 'reverse-lookup':
+            handle_lookup(args.name, phonebook)
+        elif args.command == 'reverse-lookup':
             # phonebook reverse-lookup '312 432 5432' hsphonebook.pb
-            print_results(pb_reverse_lookup(search_term, phonebook))
-        elif command == 'add':
-            handle_add(name, number, filename, phonebook)
-        elif command == 'change':
+            print_results(pb_reverse_lookup(args.number, phonebook))
+        elif args.command == 'add':
+            handle_add(args.name, args.number, args.phonebook, phonebook)
+        elif args.command == 'change':
             # phonebook change 'John Michael' '234 521 2332' hsphonebook.pb
             # error message on not exist
-            handle_change(name, number, filename, phonebook)
-        elif command == 'remove':
+            handle_change(args.name, args.number, args.phonebook, phonebook)
+        elif args.command == 'remove':
             # phonebook remove 'John Michael' hsphonebook.pb
             # error message on not exist
-            handle_remove(name, filename, phonebook)
+            handle_remove(args.name, args.phonebook, phonebook)
 
 
 if __name__ == "__main__":
