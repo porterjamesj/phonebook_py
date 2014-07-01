@@ -54,7 +54,7 @@ def pb_create(filename):
 
 # find by text partial match to name string
 def pb_lookup(name_lookup, pb):
-    results = {};
+    results = {}
     search_name = name_lookup.lower()
     for name, num in pb.iteritems():
         if search_name in name.lower():
