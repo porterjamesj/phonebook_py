@@ -44,7 +44,7 @@ def file_exists(filename):
         file_ = open(filename, 'r')
         file_.close()
         return True
-    except IOError as e:
+    except IOError:
         return False
 
 
