@@ -95,7 +95,7 @@ def pb_change(name, number, pb):
 def pb_remove(name, pb):
     """phonebook remove 'John Michael' hsphonebook.pb # error message on
     not exist"""
-    if (name in pb):
+    if name in pb:
         pb.pop(name, None)
         return True
     else:
