@@ -77,7 +77,8 @@ def pb_reverse_lookup(number, pb):
 
 # check if row exists. Return false if already exists
 def pb_add(name, number, pb):
-    if name in pb: return False
+    if name in pb:
+        return False
     pb[name] = number
     return True
 
@@ -151,7 +152,8 @@ def handle_remove(name, filename, phonebook):
 def __main__():
     # get argumets, make sure the py file is not the first one.
     arguments = sys.argv
-    if arguments[0] == 'phonebook.py': arguments.pop(0)
+    if arguments[0] == 'phonebook.py':
+        arguments.pop(0)
     command = arguments[0]
     filename, name, number, search_term = parse_arguments(arguments)
 
