@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
 import re
-
+import os
 
 # parse one row from file input
 def pb_parse_input_row(row):
@@ -42,17 +42,8 @@ def pb_save(filename, pb):
             f.write(pb_parse_output_row(name, number))
 
 
-def file_exists(filename):
-    try:
-        file_ = open(filename, 'r')
-        file_.close()
-        return True
-    except IOError:
-        return False
-
-
 def pb_create(filename):
-    if not file_exists(filename):
+    if not os.path.isfile(filename):
         file_obj = open(filename, 'w')
         file_obj.close()
         print('Created phonebook %s in current directory' % (filename))
