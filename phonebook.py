@@ -2,6 +2,32 @@
 import argparse
 import os
 
+"""General Comments
+
+There are a few more things here that I would do, but I think it's better
+for you to do them for learning purposes :)
+
+You're right that it would probably be good for all the pb_ functions
+to be factored into a Phonebook class. Something else to pay attention
+to here: Notice how the pb_ functions don't know anything about the
+fact that they're being called from a command line client? They deal
+only with manipulating the phonebook itself and don't know anything
+about the frontend. They could just easily be used for a web frontend,
+GUI app, etc. This is a good thing. Whenever I write a command line
+application I try to pay attention to where this boundary falls and
+make sure that I write a interface-agnostic core (in your case this
+would be the Phonebook class) and then write a thin command line
+wrapper around this (in your case this is the handle_*
+functions). Often I actually pull these two halves out into separate
+modules (files) just to make sure I don't cross that boundary and
+couple the two.
+
+Another thing: notice how there's a similar structure to many of the
+handle_* functions? They do something, check if it worked, and then
+maybe save the phonebook and print an appropriate message? There's
+probably a way those could be factored out to avoid that duplication.
+"""
+
 # internal phonebook manipulation functions
 
 
