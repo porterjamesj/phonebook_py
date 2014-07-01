@@ -100,7 +100,7 @@ def pb_remove(name, pb):
 
 def parse_arguments(args):
     accepted_commands = ['create', 'add', 'change', 'remove',
-'lookup', 'reverse-lookup']
+                         'lookup', 'reverse-lookup']
     filename = None
     name = None
     number = None
@@ -134,21 +134,25 @@ def handle_add(name, number, filename, phonebook):
         print('Added "%s %s to phonebook %s' % (name, number, filename))
         pb_save(filename, phonebook)
     else:
-        print('A person called %s already in phonebook %s. Changes ignored.' % (name, filename))
+        print('A person called %s already in phonebook %s. Changes ignored.' %
+              (name, filename))
 
 def handle_change(name, number, filename, phonebook):
     if pb_change(name, number, phonebook):
-        print('Change number for "%s" to "%s" in phonebook %s' % (name, number, filename))
+        print('Change number for "%s" to "%s" in phonebook %s' %
+              (name, number, filename))
         pb_save(filename, phonebook)
     else:
-        print('No person called %s in phonebook %s. Changes ignored.' % (name, filename))
+        print('No person called %s in phonebook %s. Changes ignored.' %
+              (name, filename))
 
 def handle_remove(name, filename, phonebook):
     if pb_remove(name, phonebook):
         print('Removed "%s" from phonebook %s' % (name, filename))
         pb_save(filename, phonebook)
     else:
-        print('No person called %s in phonebook %s. Changes ignored.' % (name, filename))
+        print('No person called %s in phonebook %s. Changes ignored.' %
+              (name, filename))
 
 def __main__():
     # get argumets, make sure the py file is not the first one.
