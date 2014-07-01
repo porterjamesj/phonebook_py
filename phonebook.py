@@ -168,7 +168,7 @@ def handle_remove(name, filename, phonebook):
               (name, filename))
 
 
-def __main__():
+def main():
     # get argumets, make sure the py file is not the first one.
     arguments = sys.argv
     if arguments[0] == 'phonebook.py':
@@ -199,4 +199,6 @@ def __main__():
             # error message on not exist
             handle_remove(name, filename, phonebook)
 
-__main__()
+
+if __name__ == "__main__":
+    main()
